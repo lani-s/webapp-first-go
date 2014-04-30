@@ -15,27 +15,47 @@
 # limitations under the License.
 #
 import webapp2
+import other_funcs
 
 form="""
-<form method="post" action="/testform">
-    <input name = "q">
+<form method="post">
+    What is your birthday?
+    <br>
+    <label> Month
+        <input type="text" name="month">
+    </label>
+    <label> Day
+        <input type="text" name="day">
+    </label>
+    <label> Year
+        <input type="text" name="year">
+    </label>
+    <br>
+    <br>
 	<input type = "submit">
 </form>
 """
 
 class MainHandler(webapp2.RequestHandler):
     def get(self):
-    	#self.response.headers['Content-Type'] = 'text/plain'
         self.response.write(form)
 
-class TestHandler(webapp2.RequestHandler):
-	def post(self):
-		#q = self.request.get("q")
-		#self.response.out.write(q)
 
-		self.response.headers['Content-Type'] = 'text/plain'
-		self.response.out.write(self.request)
+    def post(self):
+        #other_funcs.valid_month(month)
+        #other_funcs.valid_day(day)
+        #other_funcs.valid_year(year)
 
-app = webapp2.WSGIApplication([('/', MainHandler), 
-	                         ('/testform', TestHandler)], 
-	                         debug=True)
+        user_month = other_funcs.valid_month(self.request.get('month'))
+        user_day = other_funcs.valid_day(self.request.get('day'))
+        user_year = other_funcs.valid_year(self.request.get('year'))
+
+        if not (user_month and user_day and user_year):
+            self.response.out.write(form)
+        else:
+            self.response.out.write("Thanks! That's a valid day!")
+
+
+
+
+app = webapp2.WSGIApplication([('/', MainHandler)], debug=True)
